@@ -53,7 +53,7 @@ registerForm.addEventListener('submit', (e) => {
     }
 
     // Используем username в качестве email для регистрации в Firebase (имитация)
-    const fakeEmail = username.replace('#', '@fake.com');
+    const fakeEmail = username.replace('#', '@mel.com');
 
     // Firebase регистрация
     createUserWithEmailAndPassword(auth, fakeEmail, password)
