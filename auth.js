@@ -30,6 +30,10 @@ registerForm.addEventListener('submit', (e) => {
     const email = document.getElementById('email').value; // email от пользователя
     const password = document.getElementById('password').value; // пароль от пользователя
 
+    console.log('Username:', username);
+    console.log('Email:', email);
+    console.log('Password:', password);
+
     // Проверяем наличие # в username
     if (!username.includes('#')) {
         errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
@@ -58,10 +62,12 @@ registerForm.addEventListener('submit', (e) => {
                 }, 2000);
             })
             .catch((error) => {
+                console.error('Ошибка сохранения данных:', error);
                 errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
             });
         })
         .catch((error) => {
+            console.error('Ошибка регистрации:', error);
             errorMessage.style.color = 'red';
             errorMessage.textContent = 'Ошибка регистрации: ' + error.message;
         });
