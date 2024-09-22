@@ -1,5 +1,7 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// auth.js
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js';
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBtmSsdaisVj5FOn9QPW49kf8RPxpRDhno",
@@ -13,8 +15,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 // Handle form submission for registration
 const registerForm = document.getElementById('registerForm');
