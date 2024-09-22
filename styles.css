@@ -22,6 +22,14 @@ body {
     text-align: center;
 }
 
+/* Сделаем контейнеры формы уже на мобильных устройствах */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%; /* Ограничиваем ширину на мобильных устройствах */
+        padding: 30px;
+    }
+}
+
 h2 {
     color: #FF6700; /* Неоновый оранжевый */
     font-weight: 600;
@@ -95,4 +103,14 @@ button:hover {
     color: #00CFFD; /* Неоновый голубой */
     font-size: 16px;
     font-weight: 500;
+}
+
+/* Отключаем выделение при клике */
+* {
+    -webkit-tap-highlight-color: transparent; /* Убираем подсветку на мобильных устройствах */
+    user-select: none; /* Отключаем выделение текста */
+}
+
+button, input {
+    outline: none; /* Убираем обводку при клике */
 }
