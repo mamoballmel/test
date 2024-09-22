@@ -1,64 +1,77 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход - MELBET</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Подключаем Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>Melbet Login</title>
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
+    
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h2>Вход</h2>
         <form id="loginForm">
-            <label for="loginEmail">Email:</label>
-            <input type="email" id="loginEmail" required>
+            <label for="username">Username (добавьте #):</label>
+            <input type="text" id="username" required placeholder="username#1234">
 
-            <label for="loginPassword">Пароль:</label>
-            <input type="password" id="loginPassword" required>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" required>
 
             <button type="submit">Войти</button>
         </form>
-
-        <p class="switch-text">Нет аккаунта? <a href="index.html">Зарегистрироваться</a></p>
-
-        <div id="message"></div>
+        <p id="errorMessage" style="color:red;"></p>
+        <div class="switch-text">
+            Нет аккаунта? <a href="register.html">Зарегистрироваться</a>
+        </div>
     </div>
 
     <script>
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            authDomain: "YOUR_AUTH_DOMAIN",
             projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            storageBucket: "YOUR_STORAGE_BUCKET",
             messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
             appId: "YOUR_APP_ID"
         };
 
-        // Инициализация Firebase
+        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.getAuth();
+        const auth = firebase.auth();
 
-        // Вход пользователя
+        // Handle form submission
         const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
 
-            firebase.signInWithEmailAndPassword(auth, email, password)
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Проверяем наличие # в username
+            if (!username.includes('#')) {
+                errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
+                return;
+            }
+
+            // Используем username как email (заменяем # на @fake.com)
+            const fakeEmail = username.replace('#', '@fake.com');
+
+            // Firebase вход
+            auth.signInWithEmailAndPassword(fakeEmail, password)
                 .then((userCredential) => {
-                    const user = userCredential.user;
-                    document.getElementById('message').innerText = "Вход выполнен успешно!";
+                    // Успешный вход
+                    errorMessage.textContent = 'Вход успешен!';
                 })
                 .catch((error) => {
-                    const errorMessage = error.message;
-                    document.getElementById('message').innerText = "Ошибка: " + errorMessage;
+                    // Ошибка входа
+                    errorMessage.textContent = error.message;
                 });
         });
     </script>
