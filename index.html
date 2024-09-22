@@ -1,64 +1,87 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация - MELBET</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Подключаем Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>Melbet Registration</title>
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
+    
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h2>Регистрация</h2>
         <form id="registerForm">
-            <label for="email">Email:</label>
-            <input type="email" id="email" required>
-            
+            <label for="username">Username (добавьте #):</label>
+            <input type="text" id="username" required placeholder="username#1234">
+
             <label for="password">Пароль:</label>
             <input type="password" id="password" required>
-            
+
+            <label for="confirmPassword">Подтвердите пароль:</label>
+            <input type="password" id="confirmPassword" required>
+
             <button type="submit">Зарегистрироваться</button>
         </form>
-
-        <p class="switch-text">Имеется аккаунт? <a href="login.html">Войти в аккаунт</a></p>
-
-        <div id="message"></div>
+        <p id="errorMessage" style="color:red;"></p>
+        <div class="switch-text">
+            Имеется аккаунт? <a href="login.html">Войти в аккаунт</a>
+        </div>
     </div>
 
     <script>
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            authDomain: "YOUR_AUTH_DOMAIN",
             projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            storageBucket: "YOUR_STORAGE_BUCKET",
             messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
             appId: "YOUR_APP_ID"
         };
 
-        // Инициализация Firebase
+        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.getAuth();
+        const auth = firebase.auth();
 
-        // Регистрация пользователя
+        // Handle form submission
         const registerForm = document.getElementById('registerForm');
+        const errorMessage = document.getElementById('errorMessage');
+
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
 
-            firebase.createUserWithEmailAndPassword(auth, email, password)
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Проверяем наличие # в username
+            if (!username.includes('#')) {
+                errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
+                return;
+            }
+
+            // Проверяем совпадение паролей
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Пароли не совпадают.';
+                return;
+            }
+
+            // Используем username в качестве email для регистрации в Firebase (имитация)
+            const fakeEmail = username.replace('#', '@fake.com');
+
+            // Firebase регистрация
+            auth.createUserWithEmailAndPassword(fakeEmail, password)
                 .then((userCredential) => {
-                    const user = userCredential.user;
-                    document.getElementById('message').innerText = "Регистрация прошла успешно!";
+                    // Успешная регистрация
+                    errorMessage.textContent = 'Регистрация успешна!';
                 })
                 .catch((error) => {
-                    const errorMessage = error.message;
-                    document.getElementById('message').innerText = "Ошибка: " + errorMessage;
+                    // Ошибка регистрации
+                    errorMessage.textContent = error.message;
                 });
         });
     </script>
