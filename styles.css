@@ -75,20 +75,24 @@ button:hover {
     box-shadow: 0 8px 25px rgba(255, 103, 0, 0.6);
 }
 
+.switch-text {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #B0B0B0;
+}
+
+.switch-text a {
+    color: #00CFFD; /* Неоновый голубой */
+    text-decoration: none;
+}
+
+.switch-text a:hover {
+    text-decoration: underline;
+}
+
 #message {
     margin-top: 20px;
     color: #00CFFD; /* Неоновый голубой */
     font-size: 16px;
     font-weight: 500;
 }
-
-/* Дополнительные стили */
-a {
-    color: #00CFFD; /* Неоновый голубой */
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
