@@ -1,8 +1,8 @@
-// auth.js
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js';
+import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js';
+import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
-// Firebase configuration
+// Конфигурация Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBtmSsdaisVj5FOn9QPW49kf8RPxpRDhno",
   authDomain: "melbets-57e1c.firebaseapp.com",
@@ -14,79 +14,72 @@ const firebaseConfig = {
   measurementId: "G-MCF3S6J2LN"
 };
 
-// Initialize Firebase
+// Инициализация Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const database = getDatabase(app);
 
-// Handle form submission for registration
+// Обработчик формы регистрации
 const registerForm = document.getElementById('registerForm');
-if (registerForm) {
-    const errorMessage = document.getElementById('errorMessage');
+const errorMessage = document.getElementById('errorMessage');
 
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
 
-        // Проверяем наличие # в username
-        if (!username.includes('#')) {
-            errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
-            return;
-        }
+    // Проверяем наличие # в username
+    if (!username.includes('#')) {
+        errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
+        return;
+    }
 
-        // Проверяем совпадение паролей
-        if (password !== confirmPassword) {
-            errorMessage.textContent = 'Пароли не совпадают.';
-            return;
-        }
+    // Извлекаем ID из username
+    const id = username.substring(username.indexOf('#')); // Включая #
 
-        // Используем username в качестве email для регистрации в Firebase (имитация)
-        const fakeEmail = username.replace('#', '@fake.com');
+    // Проверяем совпадение паролей
+    if (password !== confirmPassword) {
+        errorMessage.textContent = 'Пароли не совпадают.';
+        return;
+    }
 
-        // Firebase регистрация
-        auth.createUserWithEmailAndPassword(fakeEmail, password)
-            .then((userCredential) => {
-                // Успешная регистрация
+    // Проверка пароля на сложность
+    const passwordValid = validatePassword(password);
+    if (!passwordValid) {
+        errorMessage.textContent = 'Пароль должен содержать как минимум 8 символов, включая заглавные буквы, цифры и специальные символы.';
+        return;
+    }
+
+    // Используем username в качестве email для регистрации в Firebase (имитация)
+    const fakeEmail = username.replace('#', '@fake.com');
+
+    // Firebase регистрация
+    createUserWithEmailAndPassword(auth, fakeEmail, password)
+        .then((userCredential) => {
+            // Успешная регистрация
+            const userId = userCredential.user.uid;
+
+            // Сохраняем данные в реальной базе данных
+            set(ref(database, 'users/' + userId), {
+                username: username,
+                id: id
+            })
+            .then(() => {
                 errorMessage.textContent = 'Регистрация успешна!';
             })
             .catch((error) => {
-                // Ошибка регистрации
-                errorMessage.textContent = error.message;
+                errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
             });
-    });
-}
+        })
+        .catch((error) => {
+            errorMessage.textContent = error.message;
+        });
+});
 
-// Handle form submission for login
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    const errorMessage = document.getElementById('errorMessage');
-
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        // Проверяем наличие # в username
-        if (!username.includes('#')) {
-            errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
-            return;
-        }
-
-        // Используем username как email (заменяем # на @fake.com)
-        const fakeEmail = username.replace('#', '@fake.com');
-
-        // Firebase вход
-        auth.signInWithEmailAndPassword(fakeEmail, password)
-            .then((userCredential) => {
-                // Успешный вход
-                errorMessage.textContent = 'Вход успешен!';
-            })
-            .catch((error) => {
-                // Ошибка входа
-                errorMessage.textContent = error.message;
-            });
-    });
+// Функция проверки пароля
+function validatePassword(password) {
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordPattern.test(password);
 }
