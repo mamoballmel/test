@@ -27,6 +27,8 @@ body {
     .container {
         max-width: 90%; /* Ограничиваем ширину на мобильных устройствах */
         padding: 30px;
+        width: 70%;
+
     }
 }
 
