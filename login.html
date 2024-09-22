@@ -29,55 +29,7 @@
         </div>
     </div>
 
-    <script>
-        // Firebase configuration
-        import { initializeApp } from "firebase/app";
-        import { getAnalytics } from "firebase/analytics";
-        const firebaseConfig = {
-  apiKey: "AIzaSyBtmSsdaisVj5FOn9QPW49kf8RPxpRDhno",
-  authDomain: "melbets-57e1c.firebaseapp.com",
-  databaseURL: "https://melbets-57e1c-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "melbets-57e1c",
-  storageBucket: "melbets-57e1c.appspot.com",
-  messagingSenderId: "396885652404",
-  appId: "1:396885652404:web:e6f316d285fb112ff7f8e1",
-  measurementId: "G-MCF3S6J2LN"
-        };
-
-        // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-        // Handle form submission
-        const loginForm = document.getElementById('loginForm');
-        const errorMessage = document.getElementById('errorMessage');
-
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            // Проверяем наличие # в username
-            if (!username.includes('#')) {
-                errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
-                return;
-            }
-
-            // Используем username как email (заменяем # на @fake.com)
-            const fakeEmail = username.replace('#', '@fake.com');
-
-            // Firebase вход
-            auth.signInWithEmailAndPassword(fakeEmail, password)
-                .then((userCredential) => {
-                    // Успешный вход
-                    errorMessage.textContent = 'Вход успешен!';
-                })
-                .catch((error) => {
-                    // Ошибка входа
-                    errorMessage.textContent = error.message;
-                });
-        });
-    </script>
+    <!-- Подключение внешнего скрипта -->
+    <script src="auth.js"></script>
 </body>
 </html>
