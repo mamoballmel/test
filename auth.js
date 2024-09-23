@@ -39,7 +39,7 @@ registerForm.addEventListener('submit', (e) => {
 
     // Check if username contains '#'
     if (!username.includes('#')) {
-        errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
+        errorMessage.textContent = 'Добавьте ID в имя пользователя через #.';
         errorMessage.style.color = 'red';
         return;
     }
@@ -67,7 +67,7 @@ registerForm.addEventListener('submit', (e) => {
     const dbRef = ref(database);
     get(child(dbRef, `users/` + cleanUsername)).then((snapshot) => {
         if (snapshot.exists()) {
-            errorMessage.textContent = 'Пользователь с таким ID уже существует.';
+            errorMessage.textContent = 'Пользователь с таким ID или именем уже существует.';
             errorMessage.style.color = 'red';
             return;
         }
@@ -84,7 +84,7 @@ registerForm.addEventListener('submit', (e) => {
                 // Check if the IP address already exists in the database
                 get(child(dbRef, `ip_addresses/${safeIpAddress}`)).then((ipSnapshot) => {
                     if (ipSnapshot.exists()) {
-                        errorMessage.textContent = 'С одного IP-адреса можно создать только один аккаунт.';
+                        errorMessage.textContent = 'Вы достигли лимита создания аккаунтов на устройстве.';
                         errorMessage.style.color = 'red';
                         return;
                     }
@@ -126,7 +126,7 @@ registerForm.addEventListener('submit', (e) => {
             })
             .catch((error) => {
                 errorMessage.style.color = 'red';
-                errorMessage.textContent = 'Ошибка получения IP-адреса: ' + error.message;
+                errorMessage.textContent = 'Error: ' + error.message;
             });
     }).catch((error) => {
         errorMessage.style.color = 'red';
