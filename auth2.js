@@ -1,47 +1,60 @@
-        const modal = document.getElementById("myModal");
-        const registerButton = document.getElementById("registerButton");
-        const continueButton = document.getElementById("continueButton");
-        const agreementCheckbox = document.getElementById("agreementCheckbox");
+import { registerUser } from './auth.js';
 
-        registerButton.onclick = function() {
-            const username = document.getElementById("username").value.trim();
-            const password = document.getElementById("password").value;
-            const confirmPassword = document.getElementById("confirmPassword").value;
+const modal = document.getElementById("myModal");
+const registerButton = document.getElementById("registerButton");
+const continueButton = document.getElementById("continueButton");
+const agreementCheckbox = document.getElementById("agreementCheckbox");
+const errorMessage = document.getElementById("errorMessage");
 
-            // Проверка на наличие ID в username
-            if (!username.includes('#')) {
-                document.getElementById("errorMessage").textContent = "Имя пользователя должно содержать ID через #.";
-                return;
-            }
+registerButton.onclick = function() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
-            // Проверка совпадения паролей
-            if (password !== confirmPassword) {
-                document.getElementById("errorMessage").textContent = "Пароли не совпадают.";
-                return;
-            }
+    if (!username.includes('#')) {
+        errorMessage.textContent = "Имя пользователя должно содержать ID через #.";
+        return;
+    }
 
-            // Проверка сложности пароля
-            const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
-            if (!passwordRegex.test(password)) {
-                document.getElementById("errorMessage").textContent = "Пароль должен содержать как минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.";
-                return;
-            }
+    if (password !== confirmPassword) {
+        errorMessage.textContent = "Пароли не совпадают.";
+        return;
+    }
 
-            // Если все проверки пройдены, показываем модальное окно
-            modal.style.display = "block";
-        }
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+        errorMessage.textContent = "Пароль должен содержать как минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.";
+        return;
+    }
 
-        continueButton.onclick = function() {
-            if (agreementCheckbox.checked) {
-                modal.style.display = "none";
-                document.getElementById("registerForm").submit(); // Отправляем форму
-            } else {
-                document.getElementById("errorMessage").textContent = "Пожалуйста, подтвердите ознакомление с Пользовательским соглашением.";
-            }
-        }
+    modal.style.display = "block";
+};
 
-        window.onclick = function(event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        }
+continueButton.onclick = function() {
+    if (agreementCheckbox.checked) {
+        modal.style.display = "none";
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+
+        registerUser(username, password)
+            .then(() => {
+                errorMessage.style.color = 'green';
+                errorMessage.textContent = 'Регистрация успешна!';
+                setTimeout(() => {
+                    window.location.href = '/betting.html';
+                }, 2000);
+            })
+            .catch((error) => {
+                errorMessage.style.color = 'red';
+                errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
+            });
+    } else {
+        errorMessage.textContent = "Пожалуйста, подтвердите ознакомление с Пользовательским соглашением.";
+    }
+};
+
+window.onclick = function(event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+};
