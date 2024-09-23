@@ -10,8 +10,23 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 10px; /* Уменьшенная высота полоски */
-    background-color: #1a1a1a; /* Чуть светлее, чем черный */
+    padding: 6px 10px; /* Уменьшенная высота полоски */
+    background-color: #1a1919; /* Чуть светлее, чем черный */
+}
+
+.search-icon {
+    background-color: #444; /* Используем тот же цвет, что и у баланса */
+    border-radius: 25%; /* Делаем значок круглым */
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px; /* Добавляем отступ справа */
+}
+
+.search-img {
+    width: 24px; /* Размер значка поиска */
+    height: 24px;
 }
 
 .header-left {
@@ -51,7 +66,6 @@ header {
 }
 
 .logo-img {
-    width: 70px; /* Увеличенный размер логотипа */
+    width: 80px; /* Увеличенный размер логотипа */
     height: auto;
-    cursor: pointer; /* Указатель мыши при наведении */
 }
