@@ -51,11 +51,11 @@ loginForm.addEventListener('submit', (e) => {
                     }, 1000);
                 } else {
                     errorMessage.style.color = 'red';
-                    errorMessage.textContent = 'Неправильный пароль!';
+                    errorMessage.textContent = 'Имя пользователя или пароль не верные!';
                 }
             } else {
                 errorMessage.style.color = 'red';
-                errorMessage.textContent = 'Пользователь не найден!';
+                errorMessage.textContent = 'Имя пользователя или пароль не верные!;
             }
         })
         .catch((error) => {
