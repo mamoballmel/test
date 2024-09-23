@@ -11,7 +11,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 8px 10px; /* Уменьшенная высота полоски */
-    background-color: #333; /* Чуть светлее, чем черный */
+    background-color: #1a1a1a; /* Чуть светлее, чем черный */
 }
 
 .header-left {
@@ -22,7 +22,7 @@ header {
 .header-left h1 {
     font-size: 28px;
     margin-left: 20px;
-    color: #141414; /* Неоновый оранжевый */
+    color: #ff6700; /* Неоновый оранжевый */
     font-weight: 600;
 }
 
