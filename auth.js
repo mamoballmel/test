@@ -63,7 +63,7 @@ registerForm.addEventListener('submit', (e) => {
         id: id,                  // сохраняем id, включая #
         password: password,       // сохраняем пароль
         adm: "no",                // по умолчанию null
-        balance: "0",            // по умолчанию null
+        balance: 0,            // по умолчанию null
         ban: "no"                // по умолчанию null
     })
     .then(() => {
