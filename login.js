@@ -55,7 +55,7 @@ loginForm.addEventListener('submit', (e) => {
                 }
             } else {
                 errorMessage.style.color = 'red';
-                errorMessage.textContent = 'Имя пользователя или пароль не верные!;
+                errorMessage.textContent = 'Имя пользователя или пароль не верные!';
             }
         })
         .catch((error) => {
