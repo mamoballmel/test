@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container" style="max-width: 400px; margin: auto; padding: 20px;">
+    <div class="container">
         <h2>Регистрация</h2>
         <form id="registerForm">
             <label for="username">Username:</label>
@@ -24,15 +24,7 @@
             <label for="confirmPassword">Confirm password:</label>
             <input type="password" id="confirmPassword" required>
 
-            <div>
-                <label class="checkbox">
-                    <input type="checkbox" id="agreementCheckbox" required>
-                    Я подтверждаю моё ознакомление с 
-                    <a href="/agreement" target="_blank" style="color: #4CAF50;">Пользовательским соглашением</a>.
-                </label>
-            </div>
-
-            <button type="button" id="registerButton">Зарегистрироваться</button>
+            <button type="submit">Зарегистрироваться</button>
         </form>
         <p id="errorMessage" style="color:red;"></p>
         <div class="switch-text">
