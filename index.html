@@ -76,6 +76,12 @@
         .checkbox {
             margin: 10px 0;
         }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+            display: none; /* Скрываем по умолчанию */
+        }
     </style>
 </head>
 <body>
@@ -92,8 +98,8 @@
             <input type="password" id="confirmPassword" required>
 
             <button type="button" id="registerButton">Зарегистрироваться</button>
+            <p id="errorMessage" class="error-message">Пожалуйста, заполните все поля!</p>
         </form>
-        <p id="errorMessage" style="color:red;"></p>
         <div class="switch-text">
             Имеется аккаунт? <a href="login.html">Войти в аккаунт</a>
         </div>
@@ -125,6 +131,7 @@
         const closeButton = document.getElementsByClassName("close")[0];
         const continueButton = document.getElementById("continueButton");
         const agreementCheckbox = document.getElementById("agreementCheckbox");
+        const errorMessage = document.getElementById("errorMessage");
 
         registerButton.onclick = function() {
             const username = document.getElementById('username').value.trim();
@@ -133,8 +140,9 @@
 
             if (username && password && confirmPassword) {
                 modal.style.display = "block";
+                errorMessage.style.display = "none"; // Скрыть сообщение об ошибке
             } else {
-                alert("Пожалуйста, заполните все поля!");
+                errorMessage.style.display = "block"; // Показать сообщение об ошибке
             }
         }
 
