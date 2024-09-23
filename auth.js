@@ -39,7 +39,7 @@ registerForm.addEventListener('submit', (e) => {
 
     // Check if username contains '#'
     if (!username.includes('#')) {
-        errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
+        errorMessage.textContent = 'Добавьте ID в имя пользователя через #.';
         errorMessage.style.color = 'red';
         return;
     }
@@ -72,33 +72,58 @@ registerForm.addEventListener('submit', (e) => {
             return;
         }
 
-        // Save data in Firebase
-        set(ref(database, 'users/' + cleanUsername), {
-            username: cleanUsername,
-            id: id,
-            password: password,
-            adm: 'no',
-            balance: 0,
-            ban: 'no'
-        })
-        .then(() => {
-            console.log('Сохранение username в localStorage:', username);
-            localStorage.setItem('username', username);
+        // Get IP address using an external API
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const ipAddress = data.ip;
 
-            // Success message
-            errorMessage.style.color = 'green';
-            errorMessage.textContent = 'Регистрация успешна!';
-          
-            console.log('Username сохранен в localStorage:', localStorage.getItem('username'));
-            // Redirect to the betting page after 2 seconds
-            setTimeout(() => {
-                window.location.href = '/betting.html';
-            }, 2000);
-        })
-        .catch((error) => {
-            errorMessage.style.color = 'red';
-            errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
-        });
+                // Check if the IP address already exists in the database
+                get(child(dbRef, `ip_addresses/${ipAddress}`)).then((ipSnapshot) => {
+                    if (ipSnapshot.exists()) {
+                        errorMessage.textContent = 'Вы достигли максимального количество аккаунтов на устройстве.';
+                        errorMessage.style.color = 'red';
+                        return;
+                    }
+
+                    // Save data in Firebase
+                    set(ref(database, 'users/' + cleanUsername), {
+                        username: cleanUsername,
+                        id: id,
+                        password: password,
+                        adm: 'no',
+                        balance: 0,
+                        ban: 'no',
+                        ip: ipAddress // Save the IP address
+                    })
+                    .then(() => {
+                        // Save IP address to prevent further registrations from this IP
+                        set(ref(database, 'ip_addresses/' + ipAddress), {
+                            username: cleanUsername
+                        });
+
+                        console.log('Сохранение username в localStorage:', username);
+                        localStorage.setItem('username', username);
+
+                        // Success message
+                        errorMessage.style.color = 'green';
+                        errorMessage.textContent = 'Регистрация успешна!';
+
+                        // Redirect to the betting page after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'betting.html';
+                        }, 2000);
+                    })
+                    .catch((error) => {
+                        errorMessage.style.color = 'red';
+                        errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
+                    });
+                });
+            })
+            .catch((error) => {
+                errorMessage.style.color = 'red';
+                errorMessage.textContent = 'Ошибка получения IP-адреса: ' + error.message;
+            });
     }).catch((error) => {
         errorMessage.style.color = 'red';
         errorMessage.textContent = 'Ошибка базы данных: ' + error.message;
