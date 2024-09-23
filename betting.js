@@ -1,7 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
 import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
-// Конфигурация Firebase
+// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBtmSsdaisVj5FOn9QPW49kf8RPxpRDhno",
     authDomain: "melbets-57e1c.firebaseapp.com",
@@ -13,23 +13,24 @@ const firebaseConfig = {
     measurementId: "G-MCF3S6J2LN"
 };
 
-// Инициализация Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Получаем данные пользователя
+// Retrieve username from localStorage
 const username = localStorage.getItem('username');
 
 if (username) {
-    const cleanedUsername = username.replace(/#.*$/, ''); // Удаляем все после #
+    // Remove everything after '#'
+    const cleanedUsername = username.split('#')[0];
     const userRef = ref(database, 'users/' + cleanedUsername);
-    
+
     get(userRef).then((snapshot) => {
         if (snapshot.exists()) {
             const userData = snapshot.val();
             document.getElementById('username').textContent = userData.username;
             document.getElementById('userId').textContent = userData.id;
-            document.getElementById('balance').textContent = userData.balance || 0; // Если баланс не установлен, отображаем 0
+            document.getElementById('balance').textContent = userData.balance || 0; // Default balance is 0
             document.getElementById('admin').textContent = userData.adm || 'Нет';
         } else {
             console.log('Пользователь не найден');
@@ -38,11 +39,11 @@ if (username) {
         console.error('Ошибка получения данных: ', error);
     });
 } else {
-    window.location.href = '/login.html'; // Перенаправляем на страницу входа
+    window.location.href = '/login.html'; // Redirect to login page if no user is found in localStorage
 }
 
-// Обработчик кнопки выхода
+// Logout handler
 document.getElementById('logoutButton').addEventListener('click', () => {
-    localStorage.removeItem('username'); // Удаляем имя пользователя из localStorage
-    window.location.href = 'index.html'; // Перенаправляем на страницу входа
+    localStorage.removeItem('username'); // Clear localStorage
+    window.location.href = 'index.html'; // Redirect to the login page
 });
