@@ -3,14 +3,14 @@ import { getDatabase, ref, get, child } from 'https://www.gstatic.com/firebasejs
 
 // Конфигурация Firebase
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    databaseURL: "YOUR_DATABASE_URL",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
+  apiKey: "AIzaSyBtmSsdaisVj5FOn9QPW49kf8RPxpRDhno",
+  authDomain: "melbets-57e1c.firebaseapp.com",
+  databaseURL: "https://melbets-57e1c-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "melbets-57e1c",
+  storageBucket: "melbets-57e1c.appspot.com",
+  messagingSenderId: "396885652404",
+  appId: "1:396885652404:web:e6f316d285fb112ff7f8e1",
+  measurementId: "G-MCF3S6J2LN"
 };
 
 // Инициализация Firebase
