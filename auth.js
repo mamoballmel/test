@@ -24,18 +24,20 @@ const errorMessage = document.getElementById('errorMessage');
 registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const username = document.getElementById('username').value;
+    // Получаем введённое имя пользователя
+    let username = document.getElementById('username').value.trim(); // убираем пробелы по бокам
 
     // Проверяем наличие # в username
     if (!username.includes('#')) {
-        errorMessage.textContent = 'Добавьте ID в имя пользователя через #.';
+        errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
+        errorMessage.style.color = 'red';
         return;
     }
 
     // Извлекаем ID из username
     const id = username.substring(username.indexOf('#')); // Включая #
 
-    // Сохраняем данные в реальной базе данных
+    // Сохраняем данные в Firebase
     set(ref(database, 'users/' + username), {
         username: username,
         id: id
@@ -51,6 +53,7 @@ registerForm.addEventListener('submit', (e) => {
         }, 2000);
     })
     .catch((error) => {
+        errorMessage.style.color = 'red';
         errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
     });
 });
