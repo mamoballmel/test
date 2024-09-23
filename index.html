@@ -24,6 +24,11 @@
             <label for="confirmPassword">Confirm password:</label>
             <input type="password" id="confirmPassword" required>
 
+            <div>
+                <input type="checkbox" id="agree" required>
+                <label for="agree">Я согласен с <a href="agree.html">пользовательским соглашением</a></label>
+            </div>
+
             <button type="submit">Зарегистрироваться</button>
         </form>
         <p id="errorMessage" style="color:red;"></p>
@@ -36,6 +41,5 @@
 
     <!-- Подключение внешнего скрипта -->
     <script type="module" src="auth.js"></script>
-    <script type="module" src="form.js"></script>
 </body>
 </html>
