@@ -65,13 +65,15 @@ registerForm.addEventListener('submit', (e) => {
         ban: 'no'
     })
     .then(() => {
-        // Save the username in localStorage
-        localStorage.setItem('username', username);
+     console.log('Сохранение username в localStorage:', username);
+     localStorage.setItem('username', username);
+
 
         // Success message
         errorMessage.style.color = 'green';
         errorMessage.textContent = 'Регистрация успешна!';
-
+      
+        console.log('Username сохранен в localStorage:', localStorage.getItem('username'));
         // Redirect to the betting page after 2 seconds
         setTimeout(() => {
             window.location.href = '/betting.html';
