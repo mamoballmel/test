@@ -39,7 +39,7 @@ registerForm.addEventListener('submit', (e) => {
 
     // Check if username contains '#'
     if (!username.includes('#')) {
-        errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
+        errorMessage.textContent = 'Добавьте ID в имя пользователя через #.';
         errorMessage.style.color = 'red';
         return;
     }
