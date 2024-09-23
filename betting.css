@@ -25,8 +25,8 @@ header {
 }
 
 .search-img {
-    width: 10px; /* Размер значка поиска */
-    height: 10px;
+    width: 24px; /* Размер значка поиска */
+    height: 24px;
 }
 
 .header-left {
