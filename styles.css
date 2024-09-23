@@ -107,6 +107,12 @@ button:hover {
     font-weight: 500;
 }
 
+.id-info {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #B0B0B0;
+}
+
 /* Отключаем выделение при клике */
 * {
     -webkit-tap-highlight-color: transparent; /* Убираем подсветку на мобильных устройствах */
