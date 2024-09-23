@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
-import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
+import { getDatabase, ref, set, get, child } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -39,10 +39,14 @@ registerForm.addEventListener('submit', (e) => {
 
     // Check if username contains '#'
     if (!username.includes('#')) {
-        errorMessage.textContent = 'Добавьте ID в имя пользователя через #.';
+        errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
         errorMessage.style.color = 'red';
         return;
     }
+
+    // Extract the ID from username (including '#')
+    const id = username.substring(username.indexOf('#'));
+    const cleanUsername = username.split('#')[0];
 
     // Check if passwords match
     if (password !== confirmPassword) {
@@ -59,30 +63,44 @@ registerForm.addEventListener('submit', (e) => {
         return;
     }
 
-    // Extract the ID from username
-    const id = username.substring(username.indexOf('#'));
-    const cleanUsername = username.split('#')[0];
+    // Check if ID already exists in the database
+    const dbRef = ref(database);
+    get(child(dbRef, `users/` + cleanUsername)).then((snapshot) => {
+        if (snapshot.exists()) {
+            errorMessage.textContent = 'Пользователь с таким ID уже существует.';
+            errorMessage.style.color = 'red';
+            return;
+        }
 
-    // Save data in Firebase
-    set(ref(database, 'users/' + cleanUsername), {
-        username: cleanUsername,
-        id: id,
-        password: password,
-        adm: 'no',
-        balance: 0,
-        ban: 'no'
-    })
-    .then(() => {
-        localStorage.setItem('username', username);
-        errorMessage.style.color = 'green';
-        errorMessage.textContent = 'Регистрация успешна!';
-        
-        setTimeout(() => {
-            window.location.href = 'betting.html';
-        }, 2000);
-    })
-    .catch((error) => {
+        // Save data in Firebase
+        set(ref(database, 'users/' + cleanUsername), {
+            username: cleanUsername,
+            id: id,
+            password: password,
+            adm: 'no',
+            balance: 0,
+            ban: 'no'
+        })
+        .then(() => {
+            console.log('Сохранение username в localStorage:', username);
+            localStorage.setItem('username', username);
+
+            // Success message
+            errorMessage.style.color = 'green';
+            errorMessage.textContent = 'Регистрация успешна!';
+          
+            console.log('Username сохранен в localStorage:', localStorage.getItem('username'));
+            // Redirect to the betting page after 2 seconds
+            setTimeout(() => {
+                window.location.href = '/betting.html';
+            }, 2000);
+        })
+        .catch((error) => {
+            errorMessage.style.color = 'red';
+            errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
+        });
+    }).catch((error) => {
         errorMessage.style.color = 'red';
-        errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
+        errorMessage.textContent = 'Ошибка базы данных: ' + error.message;
     });
 });
