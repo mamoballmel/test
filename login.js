@@ -44,7 +44,7 @@ loginForm.addEventListener('submit', (e) => {
                     errorMessage.textContent = 'Вход успешен!';
                     // Перенаправление на другую страницу
                     setTimeout(() => {
-                        window.location.href = "/betting";
+                        window.location.href = "/test/betting";
                     }, 1000);
                 } else {
                     errorMessage.style.color = 'red'; // Ошибка
