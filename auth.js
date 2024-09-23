@@ -73,7 +73,7 @@ registerForm.addEventListener('submit', (e) => {
 
         // Перенаправление на главную страницу через 2 секунды
         setTimeout(() => {
-            window.location.href = 'betting.html';
+            window.location.href = '/betting.html';
         }, 2000);
     })
     .catch((error) => {
