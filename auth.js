@@ -63,7 +63,7 @@ registerForm.addEventListener('submit', (e) => {
         return;
     }
 
-    // Check if ID already exists in the database
+    // Check if username already exists in the database
     const dbRef = ref(database);
     get(child(dbRef, `users/` + cleanUsername)).then((snapshot) => {
         if (snapshot.exists()) {
@@ -72,7 +72,7 @@ registerForm.addEventListener('submit', (e) => {
             return;
         }
 
-        // Get IP address using an external API
+        // Get IP address using an external API after username check
         fetch('https://api.ipify.org?format=json')
             .then(response => response.json())
             .then(data => {
@@ -98,10 +98,11 @@ registerForm.addEventListener('submit', (e) => {
                     })
                     .then(() => {
                         // Save IP address to prevent further registrations from this IP
-                        set(ref(database, 'ip_addresses/' + ipAddress), {
+                        return set(ref(database, 'ip_addresses/' + ipAddress), {
                             username: cleanUsername
                         });
-
+                    })
+                    .then(() => {
                         console.log('Сохранение username в localStorage:', username);
                         localStorage.setItem('username', username);
 
@@ -111,7 +112,7 @@ registerForm.addEventListener('submit', (e) => {
 
                         // Redirect to the betting page after 2 seconds
                         setTimeout(() => {
-                            window.location.href = 'betting.html';
+                            window.location.href = '/betting.html';
                         }, 2000);
                     })
                     .catch((error) => {
