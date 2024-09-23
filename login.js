@@ -27,10 +27,8 @@ loginForm.addEventListener('submit', (e) => {
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
 
-    // Очищаем от символов после #, если есть
     const cleanedUsername = username.split('#')[0];
 
-    // Проверяем наличие пользователя в базе данных
     const dbRef = ref(database);
 
     get(child(dbRef, `users/${cleanedUsername}`))
@@ -38,25 +36,28 @@ loginForm.addEventListener('submit', (e) => {
             if (snapshot.exists()) {
                 const userData = snapshot.val();
 
-                // Проверяем пароль
                 if (userData.password === password) {
-                    errorMessage.style.color = 'green'; // Успех
+                    errorMessage.style.color = 'green';
                     errorMessage.textContent = 'Вход успешен!';
-                    // Перенаправление на другую страницу
+                    
+                    // Сохраняем имя пользователя в localStorage
+                    localStorage.setItem('username', userData.username);
+                    
+                    // Перенаправление на страницу betting
                     setTimeout(() => {
-                        window.location.href = "/test/betting";
+                        window.location.href = "test/betting.html"; // Убедитесь, что это правильный путь
                     }, 1000);
                 } else {
-                    errorMessage.style.color = 'red'; // Ошибка
+                    errorMessage.style.color = 'red';
                     errorMessage.textContent = 'Неправильный пароль!';
                 }
             } else {
-                errorMessage.style.color = 'red'; // Ошибка
+                errorMessage.style.color = 'red';
                 errorMessage.textContent = 'Пользователь не найден!';
             }
         })
         .catch((error) => {
-            errorMessage.style.color = 'red'; // Ошибка
+            errorMessage.style.color = 'red';
             errorMessage.textContent = 'Ошибка базы данных: ' + error.message;
         });
 });
