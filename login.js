@@ -1,16 +1,16 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
 import { getDatabase, ref, get, child } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
-// Конфигурация Firebase (используем ту же конфигурацию)
+// Конфигурация Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBtmSsdaisVj5FOn9QPW49kf8RPxpRDhno",
-  authDomain: "melbets-57e1c.firebaseapp.com",
-  databaseURL: "https://melbets-57e1c-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "melbets-57e1c",
-  storageBucket: "melbets-57e1c.appspot.com",
-  messagingSenderId: "396885652404",
-  appId: "1:396885652404:web:e6f316d285fb112ff7f8e1",
-  measurementId: "G-MCF3S6J2LN"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "YOUR_DATABASE_URL",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 // Инициализация Firebase
@@ -19,7 +19,7 @@ const database = getDatabase(app);
 
 // Обработчик формы входа
 const loginForm = document.getElementById('loginForm');
-const loginErrorMessage = document.getElementById('loginErrorMessage');
+const errorMessage = document.getElementById('errorMessage');
 
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -27,31 +27,36 @@ loginForm.addEventListener('submit', (e) => {
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
 
-    // Проверяем наличие # в username и удаляем его вместе с символами после
-    const cleanedUsername = username.includes('#') ? username.split('#')[0] : username;
+    // Очищаем от символов после #, если есть
+    const cleanedUsername = username.split('#')[0];
 
-    // Получаем данные пользователя из базы данных
-    const dbRef = ref(getDatabase());
+    // Проверяем наличие пользователя в базе данных
+    const dbRef = ref(database);
+
     get(child(dbRef, `users/${cleanedUsername}`))
         .then((snapshot) => {
             if (snapshot.exists()) {
                 const userData = snapshot.val();
 
-                // Проверяем совпадение пароля
+                // Проверяем пароль
                 if (userData.password === password) {
-                    loginErrorMessage.style.color = 'green';
-                    loginErrorMessage.textContent = 'Вход успешен!';
+                    errorMessage.style.color = 'green'; // Успех
+                    errorMessage.textContent = 'Вход успешен!';
+                    // Перенаправление на другую страницу
                     setTimeout(() => {
-                        window.location.href = '/betting';  // Перенаправление на главную страницу
-                    }, 2000); // Пауза 2 секунды перед редиректом
+                        window.location.href = "/betting";
+                    }, 1000);
                 } else {
-                    loginErrorMessage.textContent = 'Неправильный пароль. Попробуйте снова.';
+                    errorMessage.style.color = 'red'; // Ошибка
+                    errorMessage.textContent = 'Неправильный пароль!';
                 }
             } else {
-                loginErrorMessage.textContent = 'Пользователь не найден. Проверьте введенный логин.';
+                errorMessage.style.color = 'red'; // Ошибка
+                errorMessage.textContent = 'Пользователь не найден!';
             }
         })
         .catch((error) => {
-            loginErrorMessage.textContent = 'Ошибка входа: ' + error.message;
+            errorMessage.style.color = 'red'; // Ошибка
+            errorMessage.textContent = 'Ошибка базы данных: ' + error.message;
         });
 });
