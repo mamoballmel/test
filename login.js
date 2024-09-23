@@ -47,7 +47,7 @@ loginForm.addEventListener('submit', (e) => {
                     
                     // Перенаправление на страницу betting
                     setTimeout(() => {
-                        window.location.href = "test/betting.html"; // Проверьте путь
+                        window.location.href = "/betting.html"; // Проверьте путь
                     }, 1000);
                 } else {
                     errorMessage.style.color = 'red';
