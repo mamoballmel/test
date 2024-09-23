@@ -1,8 +1,8 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #121212;
+    background-color: #1c1c1c; /* Светло-черный фон */
     color: white;
 }
 
@@ -11,12 +11,19 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #000;
+    background-color: #333; /* Чуть светлее, чем черный */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
 }
 
 .header-left h1 {
-    font-size: 24px;
-    margin: 0;
+    font-size: 28px;
+    margin-left: 15px;
+    color: #ff6700; /* Неоновый оранжевый */
+    font-weight: 600;
 }
 
 .header-right {
@@ -27,7 +34,7 @@ header {
 .balance-icon {
     display: flex;
     align-items: center;
-    background-color: #333;
+    background-color: #444; /* Чуть светлее, чем темный */
     border-radius: 5px;
     padding: 5px 10px;
 }
@@ -41,4 +48,10 @@ header {
 #balance {
     font-size: 18px;
     font-weight: bold;
+}
+
+.logo-img {
+    width: 50px;
+    height: auto;
+    cursor: pointer; /* Указатель мыши при наведении */
 }
