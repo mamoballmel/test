@@ -43,15 +43,23 @@ registerForm.addEventListener('submit', (e) => {
         return;
     }
 
+    // Проверка сложности пароля
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+        errorMessage.textContent = 'Пароль должен содержать как минимум 8 символов, одну заглавную букву, одну цифру и один специальный символ.';
+        errorMessage.style.color = 'red';
+        return;
+    }
+
     // Извлекаем ID из username
     const id = username.substring(username.indexOf('#')); // Включая #
 
-    // Очищаем username от символа '#'
-    const cleanUsername = username.replace('#', '');
+    // Очищаем username от символа '#' и всех символов после него
+    const cleanUsername = username.split('#')[0]; // Получаем username до #
 
     // Сохраняем данные в Firebase
     set(ref(database, 'users/' + cleanUsername), {
-        username: cleanUsername, // сохраняем чистое имя пользователя без #
+        username: cleanUsername, // сохраняем имя пользователя до #
         id: id,                  // сохраняем id, включая #
         password: password,       // сохраняем пароль
         adm: null,                // по умолчанию null
