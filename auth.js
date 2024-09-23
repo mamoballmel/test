@@ -39,7 +39,7 @@ registerForm.addEventListener('submit', (e) => {
 
     // Check if username contains '#'
     if (!username.includes('#')) {
-        errorMessage.textContent = 'Добавьте ID в имя пользователя через #.';
+        errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
         errorMessage.style.color = 'red';
         return;
     }
@@ -78,10 +78,13 @@ registerForm.addEventListener('submit', (e) => {
             .then(data => {
                 const ipAddress = data.ip;
 
+                // Replace dots in IP address with underscores for Firebase compatibility
+                const safeIpAddress = ipAddress.replace(/\./g, '_');
+
                 // Check if the IP address already exists in the database
-                get(child(dbRef, `ip_addresses/${ipAddress}`)).then((ipSnapshot) => {
+                get(child(dbRef, `ip_addresses/${safeIpAddress}`)).then((ipSnapshot) => {
                     if (ipSnapshot.exists()) {
-                        errorMessage.textContent = 'Вы достигли максимального количество аккаунтов на устройстве.';
+                        errorMessage.textContent = 'С одного IP-адреса можно создать только один аккаунт.';
                         errorMessage.style.color = 'red';
                         return;
                     }
@@ -94,11 +97,11 @@ registerForm.addEventListener('submit', (e) => {
                         adm: 'no',
                         balance: 0,
                         ban: 'no',
-                        ip: ipAddress // Save the IP address
+                        ip: ipAddress // Save the original IP address
                     })
                     .then(() => {
                         // Save IP address to prevent further registrations from this IP
-                        return set(ref(database, 'ip_addresses/' + ipAddress), {
+                        return set(ref(database, 'ip_addresses/' + safeIpAddress), {
                             username: cleanUsername
                         });
                     })
