@@ -10,7 +10,6 @@
     
     <!-- Your CSS -->
     <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="modal.css">
 </head>
 <body>
     <div class="container" style="max-width: 400px; margin: auto; padding: 20px;">
@@ -25,6 +24,14 @@
             <label for="confirmPassword">Confirm password:</label>
             <input type="password" id="confirmPassword" required>
 
+            <div>
+                <label class="checkbox">
+                    <input type="checkbox" id="agreementCheckbox" required>
+                    Я подтверждаю моё ознакомление с 
+                    <a href="/agreement" target="_blank" style="color: #4CAF50;">Пользовательским соглашением</a>.
+                </label>
+            </div>
+
             <button type="button" id="registerButton">Зарегистрироваться</button>
         </form>
         <p id="errorMessage" style="color:red;"></p>
@@ -35,23 +42,8 @@
         <p style="color: red; font-size: small;">Замена ID невозможна.</p>
     </div>
 
-    <!-- Модальное окно -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <p>
-                <label class="checkbox">
-                    <input type="checkbox" id="agreementCheckbox">
-                    Я подтверждаю моё ознакомление с 
-                    <a href="/agreement" target="_blank" style="color: #4CAF50;">Пользовательским соглашением</a>.
-                </label>
-            </p>
-            <p>Введённый вами ID и ник должны соответствовать ID и нику в игре.</p>
-            <button id="continueButton" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Продолжить</button>
-        </div>
-    </div>
-
     <!-- Подключение внешнего скрипта -->
-<script type="module" src="auth.js"></script>
-<script type="module" src="auth2.js"></script>
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="auth2.js"></script>
 </body>
 </html>
