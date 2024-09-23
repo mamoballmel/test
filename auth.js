@@ -1,5 +1,3 @@
-// auth.js
-
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
 import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
@@ -19,15 +17,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Обработчик формы регистрации
+// Элементы из DOM
 const registerForm = document.getElementById('registerForm');
 const errorMessage = document.getElementById('errorMessage');
-const continueButton = document.getElementById('continueButton');
+const registerButton = document.getElementById("registerButton");
+const continueButton = document.getElementById("continueButton");
+const modal = document.getElementById("myModal");
+const agreementCheckbox = document.getElementById("agreementCheckbox");
 
-continueButton.addEventListener('click', () => {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
+// Обработчик клика на кнопку регистрации
+registerButton.onclick = function() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
     // Проверка наличия # в username
     if (!username.includes('#')) {
@@ -51,30 +53,52 @@ continueButton.addEventListener('click', () => {
         return;
     }
 
-    // Извлечение ID из username
-    const id = username.substring(username.indexOf('#')); // Включая #
-    const cleanUsername = username.split('#')[0]; // Получаем username до #
+    // Если все проверки пройдены, показываем модальное окно
+    modal.style.display = "block";
+}
 
-    // Сохранение данных в Firebase
-    set(ref(database, 'users/' + cleanUsername), {
-        username: cleanUsername,
-        id: id,
-        password: password,
-        adm: "no",
-        balance: 0,
-        ban: "no"
-    })
-    .then(() => {
-        errorMessage.style.color = 'green';
-        errorMessage.textContent = 'Регистрация успешна!';
-        
-        // Перенаправление на главную страницу через 2 секунды
-        setTimeout(() => {
-            window.location.href = '/betting.html';
-        }, 2000);
-    })
-    .catch((error) => {
-        errorMessage.style.color = 'red';
-        errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
-    });
-});
+// Обработчик клика на кнопку продолжения в модальном окне
+continueButton.onclick = function() {
+    if (agreementCheckbox.checked) {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        // Извлечение ID из username
+        const id = username.substring(username.indexOf('#')); // Включая #
+        const cleanUsername = username.split('#')[0]; // Получаем username до #
+
+        // Сохранение данных в Firebase
+        set(ref(database, 'users/' + cleanUsername), {
+            username: cleanUsername,
+            id: id,
+            password: password,
+            adm: "no",
+            balance: 0,
+            ban: "no"
+        })
+        .then(() => {
+            errorMessage.style.color = 'green';
+            errorMessage.textContent = 'Регистрация успешна!';
+            
+            // Перенаправление на главную страницу через 2 секунды
+            setTimeout(() => {
+                window.location.href = '/betting.html';
+            }, 2000);
+        })
+        .catch((error) => {
+            errorMessage.style.color = 'red';
+            errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
+        });
+
+        modal.style.display = "none"; // Закрываем модальное окно
+    } else {
+        errorMessage.textContent = "Пожалуйста, подтвердите ознакомление с Пользовательским соглашением.";
+    }
+}
+
+// Закрытие модального окна при клике вне его
+window.onclick = function(event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}
