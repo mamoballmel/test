@@ -6,6 +6,7 @@
     <title>Melbet Registration</title>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
+    
     <link rel="stylesheet" href="styles.css">
     <style>
         /* Основные стили */
@@ -38,7 +39,7 @@
         button:disabled {
             background-color: #ccc;
         }
-        
+
         /* Модальное окно */
         .modal {
             display: none; 
@@ -49,12 +50,12 @@
             width: 100%; 
             height: 100%; 
             overflow: auto; 
-            background-color: rgba(0, 0, 0, 0.6); 
+            background-color: rgba(0,0,0,0.6); 
             padding-top: 60px; 
         }
         .modal-content {
             background-color: #fff;
-            margin: 15% auto; 
+            margin: 10% auto; 
             padding: 20px;
             border-radius: 8px;
             width: 80%; 
@@ -98,7 +99,7 @@
             <input type="password" id="confirmPassword" required>
 
             <button type="button" id="registerButton">Зарегистрироваться</button>
-            <p id="errorMessage" class="error-message">Пожалуйста, заполните все поля!</p>
+            <p id="errorMessage" class="error-message">Пожалуйста, заполните все поля правильно!</p>
         </form>
         <div class="switch-text">
             Имеется аккаунт? <a href="login.html">Войти в аккаунт</a>
@@ -111,7 +112,6 @@
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h3>Подтверждение</h3>
             <p>
                 <label class="checkbox">
                     <input type="checkbox" id="agreementCheckbox">
@@ -138,9 +138,16 @@
             const password = document.getElementById('password').value.trim();
             const confirmPassword = document.getElementById('confirmPassword').value.trim();
 
+            // Проверка заполненности полей
             if (username && password && confirmPassword) {
-                modal.style.display = "block";
-                errorMessage.style.display = "none"; // Скрыть сообщение об ошибке
+                // Проверка соответствия критериям
+                const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*\d).{8,}$/;
+                if (password !== confirmPassword || !passwordRegex.test(password)) {
+                    errorMessage.style.display = "block";
+                } else {
+                    modal.style.display = "block";
+                    errorMessage.style.display = "none"; // Скрыть сообщение об ошибке
+                }
             } else {
                 errorMessage.style.display = "block"; // Показать сообщение об ошибке
             }
