@@ -18,10 +18,12 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // Получаем данные пользователя
-const username = localStorage.getItem('username'); // Предполагается, что вы сохраняете имя пользователя в localStorage
+const username = localStorage.getItem('username');
 
 if (username) {
-    const userRef = ref(database, 'users/' + username.replace(/#.*$/, '')); // Удаляем все после #
+    const cleanedUsername = username.replace(/#.*$/, ''); // Удаляем все после #
+    const userRef = ref(database, 'users/' + cleanedUsername);
+    
     get(userRef).then((snapshot) => {
         if (snapshot.exists()) {
             const userData = snapshot.val();
@@ -36,8 +38,7 @@ if (username) {
         console.error('Ошибка получения данных: ', error);
     });
 } else {
-    // Перенаправляем на страницу входа, если пользователь не авторизован
-    window.location.href = 'index.html';
+    window.location.href = 'index.html'; // Перенаправляем на страницу входа
 }
 
 // Обработчик кнопки выхода
