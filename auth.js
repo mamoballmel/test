@@ -24,8 +24,10 @@ const errorMessage = document.getElementById('errorMessage');
 registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Получаем введённое имя пользователя
+    // Получаем введённые данные
     let username = document.getElementById('username').value.trim(); // убираем пробелы по бокам
+    const password = document.getElementById('password').value; // пароль
+    const confirmPassword = document.getElementById('confirmPassword').value; // подтверждение пароля
 
     // Проверяем наличие # в username
     if (!username.includes('#')) {
@@ -34,13 +36,27 @@ registerForm.addEventListener('submit', (e) => {
         return;
     }
 
+    // Проверяем, совпадают ли пароли
+    if (password !== confirmPassword) {
+        errorMessage.textContent = 'Пароли не совпадают.';
+        errorMessage.style.color = 'red';
+        return;
+    }
+
     // Извлекаем ID из username
     const id = username.substring(username.indexOf('#')); // Включая #
 
+    // Очищаем username от символа '#'
+    const cleanUsername = username.replace('#', '');
+
     // Сохраняем данные в Firebase
-    set(ref(database, 'users/' + username), {
-        username: username,
-        id: id
+    set(ref(database, 'users/' + cleanUsername), {
+        username: cleanUsername, // сохраняем чистое имя пользователя без #
+        id: id,                  // сохраняем id, включая #
+        password: password,       // сохраняем пароль
+        adm: null,                // по умолчанию null
+        balance: null,            // по умолчанию null
+        ban: null                 // по умолчанию null
     })
     .then(() => {
         // Меняем цвет сообщения на зеленый
