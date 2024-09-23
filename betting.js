@@ -39,4 +39,3 @@ if (username) {
 } else {
     window.location.href = 'login.html'; // Перенаправляем на страницу входа, если username не найден
 }
-
