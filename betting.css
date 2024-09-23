@@ -10,7 +10,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 8px 10px; /* Уменьшенная высота полоски */
     background-color: #333; /* Чуть светлее, чем черный */
 }
 
@@ -21,8 +21,8 @@ header {
 
 .header-left h1 {
     font-size: 28px;
-    margin-left: 15px;
-    color: #ff6700; /* Неоновый оранжевый */
+    margin-left: 20px;
+    color: #141414; /* Неоновый оранжевый */
     font-weight: 600;
 }
 
@@ -51,7 +51,7 @@ header {
 }
 
 .logo-img {
-    width: 50px;
+    width: 70px; /* Увеличенный размер логотипа */
     height: auto;
     cursor: pointer; /* Указатель мыши при наведении */
 }
