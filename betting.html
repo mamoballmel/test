@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Melbet Betting</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
+    <title>Главная</title>
+    <link rel="stylesheet" href="betting.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Ваш Профиль</h2>
-        <div id="userProfile">
-            <p id="usernameDisplay">Имя пользователя: <span id="username"></span></p>
-            <p id="idDisplay">ID: <span id="userId"></span></p>
-            <p id="balanceDisplay">Баланс: <span id="balance"></span></p>
-            <p id="adminDisplay">Админ: <span id="admin"></span></p>
+    <header>
+        <div class="header-left">
+            <h1>Главная</h1>
         </div>
-        <button id="logoutButton">Выйти</button>
-    </div>
-
+        <div class="header-right">
+            <div class="balance-icon">
+                <img src="https://i.imgur.com/pdKL9Vb.png" alt="Баланс" class="balance-img">
+                <span id="balance">0</span>
+            </div>
+        </div>
+    </header>
     <script type="module" src="betting.js"></script>
 </body>
 </html>
