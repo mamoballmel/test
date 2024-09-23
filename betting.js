@@ -38,7 +38,7 @@ if (username) {
         console.error('Ошибка получения данных: ', error);
     });
 } else {
-    window.location.href = 'index.html'; // Перенаправляем на страницу входа
+    window.location.href = 'login.html'; // Перенаправляем на страницу входа
 }
 
 // Обработчик кнопки выхода
