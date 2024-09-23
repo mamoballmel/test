@@ -1,5 +1,4 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js';
 import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
 // Конфигурация Firebase
@@ -16,7 +15,6 @@ const firebaseConfig = {
 
 // Инициализация Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const database = getDatabase(app);
 
 // Обработчик формы регистрации
@@ -26,60 +24,52 @@ const errorMessage = document.getElementById('errorMessage');
 registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
+    // Получаем введённые данные
+    let username = document.getElementById('username').value.trim(); // убираем пробелы по бокам
+    const password = document.getElementById('password').value; // пароль
+    const confirmPassword = document.getElementById('confirmPassword').value; // подтверждение пароля
 
     // Проверяем наличие # в username
     if (!username.includes('#')) {
-        errorMessage.textContent = 'Добавьте ID в имя пользователя через #.';
+        errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
+        errorMessage.style.color = 'red';
+        return;
+    }
+
+    // Проверяем, совпадают ли пароли
+    if (password !== confirmPassword) {
+        errorMessage.textContent = 'Пароли не совпадают.';
+        errorMessage.style.color = 'red';
         return;
     }
 
     // Извлекаем ID из username
     const id = username.substring(username.indexOf('#')); // Включая #
 
-    // Проверяем совпадение паролей
-    if (password !== confirmPassword) {
-        errorMessage.textContent = 'Пароли не совпадают.';
-        return;
-    }
+    // Очищаем username от символа '#'
+    const cleanUsername = username.replace('#', '');
 
-    // Проверка пароля на сложность
-    const passwordValid = validatePassword(password);
-    if (!passwordValid) {
-        errorMessage.textContent = 'Пароль должен содержать как минимум 8 символов, включая заглавные буквы, цифры и специальные символы.';
-        return;
-    }
+    // Сохраняем данные в Firebase
+    set(ref(database, 'users/' + cleanUsername), {
+        username: cleanUsername, // сохраняем чистое имя пользователя без #
+        id: id,                  // сохраняем id, включая #
+        password: password,       // сохраняем пароль
+        adm: 'no',                // по умолчанию null
+        balance: 0,            // по умолчанию null
+        ban: 'no'                 // по умолчанию null
+    })
+    .then(() => {
+        // Меняем цвет сообщения на зеленый
+        errorMessage.style.color = 'green';
+        errorMessage.textContent = 'Регистрация успешна!';
 
-    // Используем username в качестве email для регистрации в Firebase (имитация)
-    const fakeEmail = username.replace('#', '@fake.com');
-
-    // Firebase регистрация
-    createUserWithEmailAndPassword(auth, fakeEmail, password)
-        .then((userCredential) => {
-            // Успешная регистрация
-            const userId = userCredential.user.uid;
-
-            // Сохраняем данные в реальной базе данных
-            set(ref(database, 'users/' + userId), {
-                username: username,
-                id: id
-            })
-            .then(() => {
-                errorMessage.textContent = 'Регистрация успешна!';
-            })
-            .catch((error) => {
-                errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
-            });
-        })
-        .catch((error) => {
-            errorMessage.textContent = error.message;
-        });
+        // Перенаправление на главную страницу через 2 секунды
+        setTimeout(() => {
+            window.location.href = '/betting';
+        }, 2000);
+    })
+    .catch((error) => {
+        errorMessage.style.color = 'red';
+        errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
+    });
 });
-
-// Функция проверки пароля
-function validatePassword(password) {
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordPattern.test(password);
-}
