@@ -3,14 +3,14 @@ import { getDatabase, ref, get, child } from 'https://www.gstatic.com/firebasejs
 
 // Конфигурация Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBtmSsdaisVj5FOn9QPW49kf8RPxpRDhno",
-  authDomain: "melbets-57e1c.firebaseapp.com",
-  databaseURL: "https://melbets-57e1c-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "melbets-57e1c",
-  storageBucket: "melbets-57e1c.appspot.com",
-  messagingSenderId: "396885652404",
-  appId: "1:396885652404:web:e6f316d285fb112ff7f8e1",
-  measurementId: "G-MCF3S6J2LN"
+    apiKey: "AIzaSyBtmSsdaisVj5FOn9QPW49kf8RPxpRDhno",
+    authDomain: "melbets-57e1c.firebaseapp.com",
+    databaseURL: "https://melbets-57e1c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "melbets-57e1c",
+    storageBucket: "melbets-57e1c.appspot.com",
+    messagingSenderId: "396885652404",
+    appId: "1:396885652404:web:e6f316d285fb112ff7f8e1",
+    measurementId: "G-MCF3S6J2LN"
 };
 
 // Инициализация Firebase
@@ -27,7 +27,8 @@ loginForm.addEventListener('submit', (e) => {
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
 
-    const cleanedUsername = username.split('#')[0];
+    // Очищаем имя пользователя от символов после #
+    const cleanedUsername = username.split('#')[0].trim();
 
     const dbRef = ref(database);
 
@@ -36,16 +37,17 @@ loginForm.addEventListener('submit', (e) => {
             if (snapshot.exists()) {
                 const userData = snapshot.val();
 
+                // Проверяем, совпадает ли пароль
                 if (userData.password === password) {
                     errorMessage.style.color = 'green';
                     errorMessage.textContent = 'Вход успешен!';
                     
                     // Сохраняем имя пользователя в localStorage
-                    localStorage.setItem('username', userData.username);
+                    localStorage.setItem('username', cleanedUsername);
                     
                     // Перенаправление на страницу betting
                     setTimeout(() => {
-                        window.location.href = "test/betting.html"; // Убедитесь, что это правильный путь
+                        window.location.href = "test/betting.html"; // Проверьте путь
                     }, 1000);
                 } else {
                     errorMessage.style.color = 'red';
