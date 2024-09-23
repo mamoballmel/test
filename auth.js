@@ -1,5 +1,7 @@
+// auth.js
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
-import { getDatabase, ref, get, child, set } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
+import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
 // Конфигурация Firebase
 const firebaseConfig = {
@@ -20,23 +22,21 @@ const database = getDatabase(app);
 // Обработчик формы регистрации
 const registerForm = document.getElementById('registerForm');
 const errorMessage = document.getElementById('errorMessage');
+const continueButton = document.getElementById('continueButton');
 
-registerForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    // Получаем введённые данные
-    let username = document.getElementById('username').value.trim();
+continueButton.addEventListener('click', () => {
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
-    // Проверяем наличие # в username
+    // Проверка наличия # в username
     if (!username.includes('#')) {
         errorMessage.textContent = 'Добавьте # в ваше имя пользователя.';
         errorMessage.style.color = 'red';
         return;
     }
 
-    // Проверяем, совпадают ли пароли
+    // Проверка совпадения паролей
     if (password !== confirmPassword) {
         errorMessage.textContent = 'Пароли не совпадают.';
         errorMessage.style.color = 'red';
@@ -51,45 +51,30 @@ registerForm.addEventListener('submit', (e) => {
         return;
     }
 
-    // Извлекаем ID из username
-    const id = username.substring(username.indexOf('#'));
+    // Извлечение ID из username
+    const id = username.substring(username.indexOf('#')); // Включая #
+    const cleanUsername = username.split('#')[0]; // Получаем username до #
 
-    // Очищаем username от символа '#' и всех символов после него
-    const cleanUsername = username.split('#')[0];
-
-    // Проверка существования пользователя
-    const dbRef = ref(database);
-    get(child(dbRef, `users/${cleanUsername}`))
-        .then((snapshot) => {
-            if (snapshot.exists()) {
-                errorMessage.style.color = 'red';
-                errorMessage.textContent = 'Пользователь с таким именем уже существует.';
-            } else {
-                // Сохраняем данные в Firebase
-                set(ref(database, 'users/' + cleanUsername), {
-                    username: cleanUsername,
-                    id: id,
-                    password: password,
-                    adm: "no",
-                    balance: 0,
-                    ban: "no"
-                })
-                .then(() => {
-                    errorMessage.style.color = 'green';
-                    errorMessage.textContent = 'Регистрация успешна!';
-
-                    setTimeout(() => {
-                        window.location.href = '/betting.html';
-                    }, 2000);
-                })
-                .catch((error) => {
-                    errorMessage.style.color = 'red';
-                    errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
-                });
-            }
-        })
-        .catch((error) => {
-            errorMessage.style.color = 'red';
-            errorMessage.textContent = 'Ошибка базы данных: ' + error.message;
-        });
+    // Сохранение данных в Firebase
+    set(ref(database, 'users/' + cleanUsername), {
+        username: cleanUsername,
+        id: id,
+        password: password,
+        adm: "no",
+        balance: 0,
+        ban: "no"
+    })
+    .then(() => {
+        errorMessage.style.color = 'green';
+        errorMessage.textContent = 'Регистрация успешна!';
+        
+        // Перенаправление на главную страницу через 2 секунды
+        setTimeout(() => {
+            window.location.href = '/betting.html';
+        }, 2000);
+    })
+    .catch((error) => {
+        errorMessage.style.color = 'red';
+        errorMessage.textContent = 'Ошибка сохранения данных: ' + error.message;
+    });
 });
