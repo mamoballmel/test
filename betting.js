@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
-import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
+import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -17,33 +17,35 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Retrieve username from localStorage
+// Получаем данные пользователя из localStorage
 const username = localStorage.getItem('username');
 
 if (username) {
-    // Remove everything after '#'
-    const cleanedUsername = username.split('#')[0];
+    const cleanedUsername = username.replace(/#.*$/, ''); // Удаляем все после #
     const userRef = ref(database, 'users/' + cleanedUsername);
-
-    get(userRef).then((snapshot) => {
+    
+    // Слушаем изменения в реальном времени
+    onValue(userRef, (snapshot) => {
         if (snapshot.exists()) {
             const userData = snapshot.val();
+
+            // Обновляем данные на странице
             document.getElementById('username').textContent = userData.username;
             document.getElementById('userId').textContent = userData.id;
-            document.getElementById('balance').textContent = userData.balance || 0; // Default balance is 0
+            document.getElementById('balance').textContent = userData.balance || 0; // Если баланс не установлен, отображаем 0
             document.getElementById('admin').textContent = userData.adm || 'Нет';
         } else {
             console.log('Пользователь не найден');
         }
-    }).catch((error) => {
+    }, (error) => {
         console.error('Ошибка получения данных: ', error);
     });
 } else {
-    window.location.href = '/login.html'; // Redirect to login page if no user is found in localStorage
+    window.location.href = '/login.html'; // Перенаправляем на страницу входа, если username не найден
 }
 
-// Logout handler
+// Обработчик кнопки выхода
 document.getElementById('logoutButton').addEventListener('click', () => {
-    localStorage.removeItem('username'); // Clear localStorage
-    window.location.href = 'index.html'; // Redirect to the login page
+    localStorage.removeItem('username'); // Удаляем имя пользователя из localStorage
+    window.location.href = 'index.html'; // Перенаправляем на страницу входа
 });
