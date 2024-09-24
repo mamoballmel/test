@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель</title>
+</head>
+<body>
+    <form id="createPageForm" action="https://formspree.io/f/mpwagbyw" method="POST" enctype="multipart/form-data">
+        <label for="pageTitle">Заголовок страницы:</label>
+        <input type="text" id="pageTitle" name="pageTitle" required>
+
+        <label for="pageContent">Содержимое страницы:</label>
+        <textarea id="pageContent" name="pageContent" required></textarea>
+
+        <label for="pageImage">Загрузить изображение (PNG):</label>
+        <input type="file" id="pageImage" name="pageImage" accept="image/png" required>
+
+        <button type="submit">Создать страницу</button>
+    </form>
+
+    <div id="output"></div>
+
+    <script type='module' src='admin.js'>
+    </script>
+</body>
+</html>
