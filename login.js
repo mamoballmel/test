@@ -1,3 +1,12 @@
+// Проверяем, есть ли username в localStorage
+if (localStorage.getItem('username')) {
+    // Если есть, перенаправляем на страницу ставок
+    window.location.href = '/betting.html';
+} else {
+    // Если нет, просто оставляем на текущей странице или выполняем другие действия
+    console.log('Username не найден в localStorage');
+}
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
 import { getDatabase, ref, get, child } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
