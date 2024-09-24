@@ -1,3 +1,9 @@
+const storedUsername = localStorage.getItem('username');
+if (storedUsername) {
+    // Redirect to the betting page if the username exists in localStorage
+    window.location.href = 'betting.html';
+}
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
 import { getDatabase, ref, set, get, child } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
 
