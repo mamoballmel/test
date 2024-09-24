@@ -125,7 +125,7 @@ registerForm.addEventListener('submit', (e) => {
 
                         // Redirect to the betting page after 2 seconds
                         setTimeout(() => {
-                            window.location.href = '/betting.html';
+                            window.location.href = 'betting.html';
                         }, 2000);
                     })
                     .catch((error) => {
