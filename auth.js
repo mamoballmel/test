@@ -1,7 +1,7 @@
 // Проверяем, есть ли username в localStorage
 if (localStorage.getItem('username')) {
     // Если есть, перенаправляем на страницу ставок
-    window.location.href = '/betting.html';
+    window.location.href = 'betting.html';
 } else {
     // Если нет, просто оставляем на текущей странице или выполняем другие действия
     console.log('Username не найден в localStorage');
